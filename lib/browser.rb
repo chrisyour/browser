@@ -21,7 +21,8 @@ class Browser
     :iphone     => "iPhone",
     :ipod       => "iPod Touch",
     :opera      => "Opera",
-    :other      => "Other"
+    :other      => "Other",
+    :safari     => "Safari"
   }
 
   LANGUAGES = {
@@ -305,8 +306,7 @@ class Browser
   def meta
     Array.new.tap do |m|
       m << id
-      m << "safari safari#{version}" if safari?
-      m << "#{id}#{version}" unless safari?
+      m << "#{id}#{version}"
       m << platform
       m << "capable" if capable?
       m << "mobile" if mobile?
