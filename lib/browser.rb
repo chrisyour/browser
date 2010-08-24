@@ -164,6 +164,7 @@ class Browser
   # Return a symbol that identifies the browser.
   def id
     case
+    when safari?      then :safari
     when chrome?      then :chrome
     when iphone?      then :iphone
     when ipad?        then :ipad
