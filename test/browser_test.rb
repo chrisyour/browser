@@ -21,8 +21,9 @@ class BrowserTest < Test::Unit::TestCase
   OPERA      = "Opera/9.99 (Windows NT 5.1; U; pl) Presto/9.9.9"
   FIREFOX    = "Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/20121223 Ubuntu/9.25 (jaunty) Firefox/3.8"
   CHROME     = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.99 Safari/533.4"
-  ANDROID    = "Android SDK 1.5r3: Mozilla/5.0 (Linux; U; Android 1.5; de-; sdk Build/CUPCAKE) AppleWebkit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1"
+  ANDROID    = "Android SDK 1.5r3: Mozilla/5.0 (Linux; U; Android 1.5; de-; sdk Build/CUPCAKE) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1"
   BLACKBERRY = "BlackBerry7100i/4.1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/103"
+  SAFARI     = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; zh-cn) AppleWebKit/533.16 (KHTML, like Gecko) Version/5.0 Safari/533.16"
 
   def setup
     @browser = Browser.new
@@ -65,7 +66,7 @@ class BrowserTest < Test::Unit::TestCase
 
     assert_equal "iPhone", @browser.name
     assert @browser.iphone?
-    assert @browser.safari?
+    assert @browser.webkit?
     assert @browser.mobile?
     assert @browser.capable?
     assert_equal "3.0", @browser.full_version
@@ -77,7 +78,7 @@ class BrowserTest < Test::Unit::TestCase
 
     assert_equal "iPod Touch", @browser.name
     assert @browser.ipod?
-    assert @browser.safari?
+    assert @browser.webkit?
     assert @browser.mobile?
     assert @browser.capable?
     assert_equal "3.0", @browser.full_version
@@ -89,10 +90,26 @@ class BrowserTest < Test::Unit::TestCase
 
     assert_equal "iPad", @browser.name
     assert @browser.ipad?
-    assert @browser.safari?
+    assert @browser.webkit?
     assert @browser.capable?
     assert_equal "4.0.4", @browser.full_version
     assert_equal "4", @browser.version
+  end
+  
+  def test_detect_ios
+    @browser.ua = IPAD
+    
+    assert @browser.ios?
+  end
+  
+  def test_detect_safari
+    @browser.ua = SAFARI
+    
+    assert_equal "Safari", @browser.name
+    assert @browser.safari?
+    assert @browser.capable? == true
+    assert_equal "5.0", @browser.full_version
+    assert_equal "5", @browser.version
   end
 
   def test_detect_ie6
@@ -164,7 +181,7 @@ class BrowserTest < Test::Unit::TestCase
 
     assert_equal "Chrome", @browser.name
     assert @browser.chrome?
-    assert @browser.safari?
+    assert @browser.webkit?
     assert @browser.capable?
     assert_equal "5.0.375.99", @browser.full_version
     assert_equal "5", @browser.version
@@ -175,7 +192,7 @@ class BrowserTest < Test::Unit::TestCase
 
     assert_equal "Android", @browser.name
     assert @browser.android?
-    assert @browser.safari?
+    assert @browser.webkit?
     assert @browser.mobile?
     assert @browser.capable?
     assert_equal "3.1.2", @browser.full_version
@@ -217,12 +234,12 @@ class BrowserTest < Test::Unit::TestCase
 
   def test_return_string_representation
     @browser.ua = CHROME
-    assert_equal "chrome safari safari5 mac capable", @browser.to_s
+    assert_equal "chrome webkit chrome5 mac capable", @browser.to_s
   end
 
   def test_return_string_representation_for_mobile
     @browser.ua = IPHONE
-    assert_equal "iphone safari safari3 mac capable mobile", @browser.to_s
+    assert_equal "iphone webkit mobilesafari3 mac capable mobile", @browser.to_s
   end
 
   def test_return_string_representation_for_handcap

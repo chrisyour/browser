@@ -1,7 +1,7 @@
 require "rcov/rcovtask"
 require "rake/testtask"
 require "rake/rdoctask"
-require "lib/browser/version"
+require_relative "lib/browser/version"
 
 Rcov::RcovTask.new do |t|
   t.test_files = FileList["test/**/*_test.rb"]
